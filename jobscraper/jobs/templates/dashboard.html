@@ -1,0 +1,490 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Scraper Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-label {
+            color: #888;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-top: 10px;
+        }
+        
+        .scrape-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        .form-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input, select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .jobs-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .search-bar {
+            margin-bottom: 25px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        
+        .jobs-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .job-card {
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .job-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+        
+        .job-title {
+            font-size: 1.4em;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .job-source {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            text-transform: uppercase;
+        }
+        
+        .job-company {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        .job-details {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            color: #888;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+        
+        .job-details span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .job-description {
+            color: #555;
+            line-height: 1.6;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .view-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .view-link:hover {
+            text-decoration: underline;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .page-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .page-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .page-btn.active {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Job Scraper Dashboard</h1>
+            <p class="subtitle">Automated job scraping from Indeed, LinkedIn & Glassdoor</p>
+        </header>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Jobs</div>
+                <div class="stat-value" id="totalJobs">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Jobs</div>
+                <div class="stat-value" id="activeJobs">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Companies</div>
+                <div class="stat-value" id="totalCompanies">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Sources</div>
+                <div class="stat-value" id="totalSources">0</div>
+            </div>
+        </div>
+
+        <!-- Scraping Form -->
+        <div class="scrape-form">
+            <h2 class="form-title">🕷️ Start New Scrape</h2>
+            <div id="message"></div>
+            <form id="scrapeForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="source">Source</label>
+                        <select id="source" required>
+                            <option value="">Select source...</option>
+                            <option value="indeed">Indeed</option>
+                            <option value="linkedin">LinkedIn</option>
+                            <option value="glassdoor">Glassdoor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchQuery">Job Title / Keywords</label>
+                        <input type="text" id="searchQuery" placeholder="e.g., Python Developer" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" placeholder="e.g., New York">
+                    </div>
+                    <div class="form-group">
+                        <label for="maxPages">Max Pages</label>
+                        <input type="number" id="maxPages" min="1" max="5" value="1">
+                    </div>
+                </div>
+                <button type="submit" class="btn" id="scrapeBtn">Start Scraping</button>
+            </form>
+        </div>
+
+        <!-- Jobs List -->
+        <div class="jobs-section">
+            <h2 class="form-title">📋 Scraped Jobs</h2>
+            <div class="search-bar">
+                <input type="text" class="search-input" id="searchJobs" placeholder="Search jobs by title, company, or location...">
+            </div>
+            <div id="jobsList" class="jobs-grid">
+                <div class="loading">Loading jobs...</div>
+            </div>
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+<script>
+    const API_BASE = '/api';
+    let currentPage = 1;
+    let searchTimeout;
+
+    async function loadStats() {
+        try {
+            const response = await fetch(`${API_BASE}/jobs/stats/`);
+            const data = await response.json();
+            document.getElementById('totalJobs').textContent = data.total_jobs;
+            document.getElementById('activeJobs').textContent = data.active_jobs;
+            document.getElementById('totalCompanies').textContent = data.top_companies.length;
+            document.getElementById('totalSources').textContent = data.by_source.length;
+        } catch (error) {
+            console.error('Error loading stats:', error);
+        }
+    }
+
+    async function loadJobs(page = 1, search = '') {
+        try {
+            let url = `${API_BASE}/jobs/?page=${page}`;
+            if (search) url += `&search=${encodeURIComponent(search)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            displayJobs(data.results);
+            displayPagination(data);
+        } catch (error) {
+            document.getElementById('jobsList').innerHTML = '<div class="loading">Error loading jobs</div>';
+        }
+    }
+
+    function displayJobs(jobs) {
+        const container = document.getElementById('jobsList');
+        if (jobs.length === 0) {
+            container.innerHTML = '<div class="loading">No jobs found</div>';
+            return;
+        }
+        container.innerHTML = jobs.map(job => `
+            <div class="job-card">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">${job.title}</div>
+                        <div class="job-company">${job.company}</div>
+                    </div>
+                    <span class="job-source">${job.source}</span>
+                </div>
+                <div class="job-details">
+                    ${job.location ? `<span>📍 ${job.location}</span>` : ''}
+                    ${job.salary ? `<span>💰 ${job.salary}</span>` : ''}
+                    ${job.job_type ? `<span>💼 ${job.job_type}</span>` : ''}
+                    <span>🕐 ${new Date(job.scraped_at).toLocaleDateString()}</span>
+                </div>
+                <a href="${job.source_url || '#'}" target="_blank" class="view-link">View Original Post →</a>
+            </div>
+        `).join('');
+    }
+
+    function displayPagination(data) {
+        const container = document.getElementById('pagination');
+        const totalPages = Math.ceil(data.count / 20);
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+        let html = '';
+        for (let i = 1; i <= totalPages; i++) {
+            html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+        }
+        container.innerHTML = html;
+    }
+
+    function changePage(page) {
+        currentPage = page;
+        const search = document.getElementById('searchJobs').value;
+        loadJobs(page, search);
+    }
+
+    document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('scrapeBtn');
+        btn.disabled = true;
+        const msg = document.getElementById('message');
+
+        const payload = {
+            source: document.getElementById('source').value,
+            search_query: document.getElementById('searchQuery').value,
+            location: document.getElementById('location').value,
+            max_pages: parseInt(document.getElementById('maxPages').value)
+        };
+
+        try {
+            const res = await fetch(`${API_BASE}/jobs/scrape/`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            msg.className = 'message success';
+            msg.textContent = '✅ Scraping started! Check logs for progress.';
+            loadStats();
+        } catch (err) {
+            msg.className = 'message error';
+            msg.textContent = '❌ Failed to start scraping.';
+        } finally {
+            btn.disabled = false;
+            setTimeout(() => msg.textContent = '', 3000);
+        }
+    });
+
+    document.getElementById('searchJobs').addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            currentPage = 1;
+            loadJobs(1, e.target.value);
+        }, 500);
+    });
+
+    // Initial load
+    loadStats();
+    loadJobs();
+</script>
