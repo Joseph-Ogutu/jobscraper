@@ -1,4 +1,4 @@
-# 🕷️ Job Scraper – Django + Selenium Web Scraping Dashboard
+#  Job Scraper – Django + Selenium Web Scraping Dashboard
 
 A **Django-based job scraping application** that extracts job listings from **Indeed**, **LinkedIn**, and **Glassdoor**, stores them in a PostgreSQL/SQLite database, and displays them in a responsive dashboard with REST API support.
 
@@ -6,21 +6,21 @@ A **Django-based job scraping application** that extracts job listings from **In
 
 ---
 
-## 🎯 Features
+##  Features
 
-- ✅ **Web Scraping** with **Selenium** (for JS-heavy sites) + **BeautifulSoup** (for static HTML)
-- ✅ **Fallback to Indeed RSS** when Selenium is blocked (ensures reliability)
-- ✅ **Duplicate prevention** using unique `source_url`
-- ✅ **RESTful API** with Django REST Framework (DRF)
-- ✅ **Real-time dashboard** with stats, search, and pagination
-- ✅ **Background scraping** (non-blocking via threading)
-- ✅ **Scrape logging** (`ScrapeLog` model tracks success/failure/duplicates)
-- ✅ **Advanced filtering**: by source, company, location, job type
-- ✅ **Full-text search** across title, company, and description
+-  **Web Scraping** with **Selenium** (for JS-heavy sites) + **BeautifulSoup** (for static HTML)
+-  **Fallback to Indeed RSS** when Selenium is blocked (ensures reliability)
+-  **Duplicate prevention** using unique `source_url`
+-  **RESTful API** with Django REST Framework (DRF)
+-  **Real-time dashboard** with stats, search, and pagination
+-  **Background scraping** (non-blocking via threading)
+-  **Scrape logging** (`ScrapeLog` model tracks success/failure/duplicates)
+-  **Advanced filtering**: by source, company, location, job type
+-  **Full-text search** across title, company, and description
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer          | Technologies |
 |----------------|--------------|
@@ -33,7 +33,7 @@ A **Django-based job scraping application** that extracts job listings from **In
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 jobscraper/
 ├── jobscraper/              # Django project settings
 └── jobs/                    # Main app
@@ -49,7 +49,7 @@ jobscraper/
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Clone & Setup
 
